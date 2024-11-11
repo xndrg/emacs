@@ -51,7 +51,7 @@
 (add-hook 'go-mode-hook (lambda () (setq tab-width 4)))
 
 (require 'handmade-theme)
-(rc/require-theme 'naysayer-theme)
+(rc/require-theme 'naysayer)
 
 (rc/require 'smex)
 (smex-initialize)

@@ -50,9 +50,6 @@
 (rc/require 'go-mode)
 (add-hook 'go-mode-hook (lambda () (setq tab-width 4)))
 
-(require 'handmade-theme)
-(rc/require-theme 'naysayer)
-
 (rc/require 'smex)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
@@ -70,8 +67,10 @@
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
+(rc/require 'expand-region)
 (global-set-key (kbd "C-;") 'er/expand-region)
 
+(rc/require 'magit)
 (setq visible-bell 1)
 
 (load-file custom-file)

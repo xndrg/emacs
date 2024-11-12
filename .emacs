@@ -20,6 +20,7 @@
 (ido-mode 1)
 (ido-everywhere 1)
 (global-display-line-numbers-mode 1)
+(setq-default indent-tabs-mode nil)
 
 (defun rc/duplicate-line ()
   "Duplicate current line"

@@ -20,7 +20,8 @@
 (ido-mode 1)
 (ido-everywhere 1)
 (global-display-line-numbers-mode 1)
-(setq-default indent-tabs-mode nil)
+(setq inhibit-startup-screen t)
+(setq dired-dwim-target t)
 
 (defun rc/duplicate-line ()
   "Duplicate current line"

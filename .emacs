@@ -1,8 +1,5 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-;; and `package-pinned-packages`. Most users will not need or want to do this.
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
 (load "~/.emacs.rc/rc.el")
@@ -10,7 +7,7 @@
 (setq custom-file "~/.emacs.custom.el")
 (setq make-backup-files nil)
 
-(add-to-list 'default-frame-alist `(font . "Liberation Mono-14"))
+(add-to-list 'default-frame-alist `(font . "Consolas-12"))
 
 (tool-bar-mode 0)
 (menu-bar-mode 0)
@@ -22,6 +19,12 @@
 (global-display-line-numbers-mode 1)
 (setq inhibit-startup-screen t)
 (setq dired-dwim-target t)
+(setq display-line-numbers-type 1)
+(global-hl-line-mode 1)
+(set-language-environment "UTF-8")
+
+(rc/require 'doom-themes)
+(load-theme 'doom-gruvbox)
 
 (defun rc/duplicate-line ()
   "Duplicate current line"
@@ -35,22 +38,28 @@
     (move-beginning-of-line 1)
     (forward-char column)))
 
+(global-set-key (kbd "C-,") 'rc/duplicate-line)
+
 (rc/require 'ansi-color)
 (defun display-ansi-colors ()
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
-(global-set-key (kbd "C-,") 'rc/duplicate-line)
-
 (add-to-list 'load-path "~/.emacs.local")
-
 (require 'simpc-mode)
 ;; (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 
 (require 'fasm-mode)
 
+(defun my-c++-mode-hook ()
+  (setq c-basic-offset 4)
+  (c-set-offset 'substatement-open 0))
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
+
 (rc/require 'go-mode)
 (add-hook 'go-mode-hook (lambda () (setq tab-width 4)))
+
+(rc/require 'haskell-mode)
 
 (rc/require 'smex)
 (smex-initialize)
@@ -69,10 +78,31 @@
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
-(rc/require 'expand-region)
-(global-set-key (kbd "C-;") 'er/expand-region)
-
 (rc/require 'magit)
-(setq visible-bell 1)
+(global-set-key (kbd "C-x g") 'magit-status)
+
+;; Disable stupid windows sounds on windows
+(when (eq system-type 'windows-nt)
+  (setq visible-bell 1))
+
+;; Translation
+(rc/require 'go-translate)
+(setq gt-langs '(en ru))
+(setq gt-default-translator (gt-translator :engines (gt-google-engine)))
+(global-set-key (kbd "C-;") 'gt-do-translate)
+
+;; Org
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c c") #'org-capture)
+(setq org-startup-indented 1)
+
+;; Try complete file path
+(global-set-key (kbd "C-M-/") 'my-expand-file-name-at-point)
+(defun my-expand-file-name-at-point ()
+  "Use hippie-expand to expand the filename"
+  (interactive)
+  (let ((hippie-expand-try-functions-list '(try-complete-file-name-partially try-complete-file-name)))
+    (call-interactively 'hippie-expand)))
 
 (load-file custom-file)

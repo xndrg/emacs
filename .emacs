@@ -24,7 +24,7 @@
 (set-language-environment "UTF-8")
 
 (rc/require 'doom-themes)
-(load-theme 'doom-gruvbox)
+(load-theme 'doom-gruvbox t)
 
 (defun rc/duplicate-line ()
   "Duplicate current line"
@@ -85,11 +85,9 @@
 (when (eq system-type 'windows-nt)
   (setq visible-bell 1))
 
-;; Translation
-(rc/require 'go-translate)
-(setq gt-langs '(en ru))
-(setq gt-default-translator (gt-translator :engines (gt-google-engine)))
-(global-set-key (kbd "C-;") 'gt-do-translate)
+;; Expand region
+(rc/require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; Org
 (global-set-key (kbd "C-c l") #'org-store-link)

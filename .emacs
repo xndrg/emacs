@@ -20,6 +20,8 @@
 (setq inhibit-startup-screen t)
 (setq dired-dwim-target t)
 (setq display-line-numbers-type 1)
+(setq truncate-partial-width-windows 1)
+(setq truncate-lines 1)
 (global-hl-line-mode 1)
 (set-language-environment "UTF-8")
 

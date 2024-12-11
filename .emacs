@@ -24,7 +24,7 @@
 (set-language-environment "UTF-8")
 
 (rc/require 'doom-themes)
-(load-theme 'doom-gruvbox t)
+(load-theme 'doom-homage-black t)
 
 (defun rc/duplicate-line ()
   "Duplicate current line"

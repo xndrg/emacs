@@ -23,6 +23,7 @@
 (setq truncate-partial-width-windows nil)
 (global-hl-line-mode 1)
 (set-language-environment "UTF-8")
+(setq-default indent-tabs-mode nil)
 
 (rc/require 'doom-themes)
 (load-theme 'doom-homage-black t)

@@ -7,7 +7,10 @@
 (setq custom-file "~/.emacs.custom.el")
 (setq make-backup-files nil)
 
-(add-to-list 'default-frame-alist `(font . "Consolas-12"))
+;; My favorite fonts
+(add-to-list 'default-frame-alist `(font . "Consolas-14"))
+;; (add-to-list 'default-frame-alist `(font . "UnifontExMono-12"))
+;; (add-to-list 'default-frame-alist `(font . "Iosevka Custom-14"))
 
 (tool-bar-mode 0)
 (menu-bar-mode 0)
@@ -24,10 +27,22 @@
 (global-hl-line-mode 1)
 (set-language-environment "UTF-8")
 (setq-default indent-tabs-mode nil)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (rc/require 'doom-themes)
-(load-theme 'doom-homage-black t)
+(load-theme 'doom-gruvbox t)
 
+(use-package mood-line
+
+  ;; Enable mood-line
+  :config
+  (mood-line-mode)
+
+  ;; Use pretty Fira Code-compatible glyphs
+  :custom
+  (mood-line-glyph-alist mood-line-glyphs-fira-code))
+
+;; Duplicate line
 (defun rc/duplicate-line ()
   "Duplicate current line"
   (interactive)
@@ -39,7 +54,6 @@
     (insert line)
     (move-beginning-of-line 1)
     (forward-char column)))
-
 (global-set-key (kbd "C-,") 'rc/duplicate-line)
 
 (rc/require 'ansi-color)
@@ -51,27 +65,35 @@
 (require 'simpc-mode)
 ;; (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 
+;; Fasm-mode
 (require 'fasm-mode)
 
+;; C++ normal tabs hook
 (defun my-c++-mode-hook ()
   (setq c-basic-offset 4)
   (c-set-offset 'substatement-open 0))
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+(add-hook 'c-mode-hook 'my-c++-mode-hook)
 
+;; Go-mode
 (rc/require 'go-mode)
 (add-hook 'go-mode-hook (lambda () (setq tab-width 4)))
 
+;; Haskell-mode
 (rc/require 'haskell-mode)
 
+;; Smex
 (rc/require 'smex)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
+;; Move text
 (rc/require 'move-text)
 (global-set-key (kbd "M-p") 'move-text-up)
 (global-set-key (kbd "M-n") 'move-text-down)
 
+;; Multiple cursors
 (rc/require 'multiple-cursors)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->")         'mc/mark-next-like-this)
@@ -80,10 +102,11 @@
 (global-set-key (kbd "C-\"")        'mc/skip-to-next-like-this)
 (global-set-key (kbd "C-:")         'mc/skip-to-previous-like-this)
 
+;; Magit
 (rc/require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;; Disable stupid windows sounds on windows
+;; Disable stupid beep sounds on windows
 (when (eq system-type 'windows-nt)
   (setq visible-bell 1))
 
@@ -97,7 +120,7 @@
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-startup-indented 1)
 
-;; Try complete file path
+;; Try to complete the file path
 (global-set-key (kbd "C-M-/") 'my-expand-file-name-at-point)
 (defun my-expand-file-name-at-point ()
   "Use hippie-expand to expand the filename"
@@ -105,4 +128,29 @@
   (let ((hippie-expand-try-functions-list '(try-complete-file-name-partially try-complete-file-name)))
     (call-interactively 'hippie-expand)))
 
+;; Zig-mode
+(rc/require 'zig-mode)
+(setq zig-format-on-save nil)
+
+;; Compilation mode ANSI colors hook
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (dired-toggle-read-only)
+  (display-ansi-colors)
+  (dired-toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+;; Typescript mode
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1))
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+(rc/require 'tide)
+
+;; Cmake-mode
+(rc/require 'cmake-mode)
+  
 (load-file custom-file)

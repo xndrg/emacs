@@ -29,8 +29,10 @@
 (setq-default indent-tabs-mode nil)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(rc/require 'doom-themes)
-(load-theme 'doom-gruvbox t)
+(setq default-directory "~/dev/")
+
+(rc/require 'gruber-darker-theme)
+(load-theme 'gruber-darker t)
 
 (use-package mood-line
 
@@ -108,7 +110,9 @@
 
 ;; Disable stupid beep sounds on windows
 (when (eq system-type 'windows-nt)
-  (setq visible-bell 1))
+  (setq ring-bell-function 'ignore))
+  ;; (setq visible-bell 1))
+
 
 ;; Expand region
 (rc/require 'expand-region)
@@ -152,5 +156,10 @@
 
 ;; Cmake-mode
 (rc/require 'cmake-mode)
+
+(rc/require 'glsl-mode)
+(defun glsl-mode-adjust-closing-bracket ()
+  (setf (cdr (assoc 'arglist-close c-offsets-alist)) 0))
+(add-hook 'glsl-mode-hook #'glsl-mode-adjust-closing-bracket)
   
 (load-file custom-file)

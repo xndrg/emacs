@@ -19,20 +19,23 @@
 (fringe-mode 0)
 (ido-mode 1)
 (ido-everywhere 1)
+(ido-ubiquitous-mode 1)
 (setq inhibit-startup-screen t)
 (setq dired-dwim-target t)
-(setq display-line-numbers-type 1)
 (setq truncate-lines nil)
 (setq truncate-partial-width-windows nil)
 (global-hl-line-mode 1)
 (set-language-environment "UTF-8")
 (setq-default indent-tabs-mode nil)
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode)
+(setq scroll-margin 10)
 
 (setq default-directory "~/dev/")
 
-(rc/require 'gruber-darker-theme)
-(load-theme 'gruber-darker t)
+(rc/require 'hc-zenburn-theme)
+(load-theme 'hc-zenburn t)
 
 (use-package mood-line
 
@@ -154,12 +157,23 @@
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
 (rc/require 'tide)
 
-;; Cmake-mode
-(rc/require 'cmake-mode)
-
 (rc/require 'glsl-mode)
 (defun glsl-mode-adjust-closing-bracket ()
   (setf (cdr (assoc 'arglist-close c-offsets-alist)) 0))
 (add-hook 'glsl-mode-hook #'glsl-mode-adjust-closing-bracket)
   
 (load-file custom-file)
+
+;; Dired-x (idk wtf is that i stole this shit from tsoding hope its good)
+(require 'dired-x)
+(setq dired-omit-files
+      (concat dired-omit-files "\\|^\\..+$"))
+(setq-default dired-dwim-target t)
+(setq dired-listing-switches "-alh")
+(setq dired-mouse-drag-files t)
+
+;; Company (Autocompletions)
+(rc/require 'company)
+(global-company-mode)
+(setq company-idle-delay nil)
+(global-set-key (kbd "M-/") 'company-complete)
